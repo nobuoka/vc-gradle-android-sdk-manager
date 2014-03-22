@@ -1,0 +1,25 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+version = '0.1-SNAPSHOT'
+
+jar {
+    manifest {
+        attributes(
+            'Implementation-Title': 'vc-android-sdk-manager',
+            'Implementation-Version': version)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+
+    testCompile 'junit:junit:4.+'
+}
