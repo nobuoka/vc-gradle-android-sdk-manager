@@ -11,19 +11,16 @@ class SdkAndroidCommandExecuter {
     /** File path of the tools/android command. */
     private final String mExecFilePath;
 
-    private final ProcessUserAgent.Factory mProcessUAFactory;
-
-    public SdkAndroidCommandExecuter(
-            Path execFilePath, ProcessUserAgent.Factory processUAFactory) {
+    public SdkAndroidCommandExecuter(Path execFilePath) {
         mExecFilePath = execFilePath.toFile().getAbsolutePath();
-        mProcessUAFactory = processUAFactory;
     }
 
     Process executeCommand(String[] cmd) throws IOException {
         return Runtime.getRuntime().exec(cmd);
     }
 
-    public void executeUpdateSdkCommandWithFilter(String filter) {
+    public void executeUpdateSdkCommandWithFilter(
+            String filter, ProcessUserAgent.Factory processUAFactory) {
         String[] cmd = new String[] {
             mExecFilePath,
             "update", "sdk",
@@ -38,7 +35,7 @@ class SdkAndroidCommandExecuter {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        try (final ProcessUserAgent pua = mProcessUAFactory.createProcessUserAgent(updateSdkProc)) {
+        try (final ProcessUserAgent pua = processUAFactory.createProcessUserAgent(updateSdkProc)) {
             Thread t = new Thread() {
                 @Override public void run() {
                     pua.communicateSynchronously();

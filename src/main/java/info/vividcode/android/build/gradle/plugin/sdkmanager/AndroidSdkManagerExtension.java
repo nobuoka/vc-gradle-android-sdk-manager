@@ -23,9 +23,8 @@ public class AndroidSdkManagerExtension {
         Path execFilePath =
                 AndroidSdkManagerUtils.findSdkToolsAndroidExecFile(sdkDirPath);
         // Execute `android update sdk ...` command.
-        SdkAndroidCommandExecuter executer =
-                new SdkAndroidCommandExecuter(execFilePath, puaFactory);
-        executer.executeUpdateSdkCommandWithFilter(filter);
+        SdkAndroidCommandExecuter executer = new SdkAndroidCommandExecuter(execFilePath);
+        executer.executeUpdateSdkCommandWithFilter(filter, puaFactory);
     }
 
     public void updateSdkPlatformAndBuildTools() {
