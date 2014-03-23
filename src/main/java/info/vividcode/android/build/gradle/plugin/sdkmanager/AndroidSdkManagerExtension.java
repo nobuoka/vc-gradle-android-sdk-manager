@@ -14,16 +14,18 @@ public class AndroidSdkManagerExtension {
         mProject = project;
     }
 
+    private SdkAndroidCommandExecuter createSdkAndroidCommandExecuter() {
+        Path sdkDirPath = AndroidSdkManagerUtils.findAndroidSdkDir(mProject);
+        Path execFilePath =
+                AndroidSdkManagerUtils.findSdkToolsAndroidExecFile(sdkDirPath);
+        return new SdkAndroidCommandExecuter(execFilePath);
+    }
+
     public void updateSdkWithFilterWithAgreeingLicenseAutomatically(String filter) {
         ProcessUserAgent.Factory puaFactory =
                 new AutomaticallyResponsingProcessUserAgent.Factory(
                         Pattern.compile("Do you accept the license .*"), "y");
-        // Get tools/android command file in Android SDK.
-        Path sdkDirPath = AndroidSdkManagerUtils.findAndroidSdkDir(mProject);
-        Path execFilePath =
-                AndroidSdkManagerUtils.findSdkToolsAndroidExecFile(sdkDirPath);
-        // Execute `android update sdk ...` command.
-        SdkAndroidCommandExecuter executer = new SdkAndroidCommandExecuter(execFilePath);
+        SdkAndroidCommandExecuter executer = createSdkAndroidCommandExecuter();
         executer.executeUpdateSdkCommandWithFilter(filter, puaFactory);
     }
 
