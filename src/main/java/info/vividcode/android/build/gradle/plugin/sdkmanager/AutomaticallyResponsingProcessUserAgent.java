@@ -133,26 +133,32 @@ public class AutomaticallyResponsingProcessUserAgent implements ProcessUserAgent
         mAlreadyStarted = true;
     }
 
+    private volatile Thread[] mThreads;
+
     @Override
     public void communicateSynchronously() {
         checkIfFirstTimeOrThrow();
 
-        Thread[] threads = {
+        mThreads = new Thread[] {
             new Thread(new ProcStdoutConsumingTask(
                     mRequestPattern, mResponse, mProcessStdOutput, mProcessInput)),
             new Thread(new ProcErroutConsumingTask(mProcessErrOutput)),
         };
-        for (Thread t : threads) t.start();
+        for (Thread t : mThreads) t.start();
+    }
+
+    private void stopThreads() {
+        for (Thread t : mThreads) t.interrupt();
         try {
-            for (Thread t : threads) t.join();
+            for (Thread t : mThreads) t.join();
         } catch (InterruptedException e) {
-            for (Thread t : threads) t.interrupt();
             Thread.currentThread().interrupt();
         }
     }
 
     @Override
     public void close() throws IOException {
+        stopThreads();
         mProcessStdOutput.close();
         mProcessErrOutput.close();
         mProcessInput.close();

@@ -26,22 +26,40 @@ class ReaderInputConsumer {
         mCallback.onLineEnded();
     }
 
+    private void outputStringBuffer(StringBuilder sb) {
+        if (sb.length() == 0) return;
+        String out = sb.toString();
+        sb.setLength(0);
+        callOnOutputReceived(out);
+        if (out.length() != 0 && out.charAt(out.length() - 1) == '\r') {
+            callOnLineEnded();
+        }
+    }
+
     void consumeSynchronously() throws IOException {
         char[] chars = new char[2048];
         StringBuilder sb = new StringBuilder();
-        int length = 0;
-        while ((length = mReader.read(chars)) >= 0) {
-            sb.append(chars, 0, length);
-            outputEndedLines(sb);
+        while (true) {
             if (!mReader.ready()) {
-                String out = sb.toString();
-                sb.setLength(0);
-                callOnOutputReceived(out);
-                if (out.length() != 0 && out.charAt(out.length() - 1) == '\r') {
-                    callOnLineEnded();
+                outputStringBuffer(sb);
+                if (Thread.currentThread().isInterrupted()) {
+                    break;
                 }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                continue;
+            }
+
+            int length = mReader.read(chars);
+            if (length >= 0) {
+                sb.append(chars, 0, length);
+                outputEndedLines(sb);
             }
         }
+        outputStringBuffer(sb);
     }
 
     private void outputEndedLines(StringBuilder sb) {

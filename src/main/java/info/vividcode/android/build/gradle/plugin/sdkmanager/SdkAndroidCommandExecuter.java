@@ -31,20 +31,29 @@ class SdkAndroidCommandExecuter {
             "--all",
             "--filter", filter,
         };
-        Process updateSdkProc;
+        final Process updateSdkProc;
         try {
             updateSdkProc = executeCommand(cmd);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        try (ProcessUserAgent pua = mProcessUAFactory.createProcessUserAgent(updateSdkProc)) {
-            pua.communicateSynchronously();
+        try (final ProcessUserAgent pua = mProcessUAFactory.createProcessUserAgent(updateSdkProc)) {
+            Thread t = new Thread() {
+                @Override public void run() {
+                    pua.communicateSynchronously();
+                }
+            };
+            t.start();
             try {
                 updateSdkProc.waitFor();
             } catch (InterruptedException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
+                Thread.currentThread().interrupt();
+            }
+            try {
+                t.join(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
             // TODO error handling
         } catch (IOException err) {
