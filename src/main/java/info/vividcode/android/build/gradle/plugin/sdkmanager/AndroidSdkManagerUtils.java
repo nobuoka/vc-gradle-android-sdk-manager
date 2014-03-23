@@ -24,6 +24,15 @@ class AndroidSdkManagerUtils {
                 project, "getBuildToolsRevision", "android.buildToolsRevision");
     }
 
+    // Build tools components don't appear available component list,
+    // so check the directory existence.
+    static boolean checkSpecifiedBuildToolsInstalled(
+            Project project, String buildToolsRevision) {
+        Path sdkDir = findAndroidSdkDir(project);
+        Path platformDir = sdkDir.resolve("build-tools").resolve(buildToolsRevision);
+        return platformDir.toFile().exists();
+    }
+
     private static String getPropertyFromAndroidExt(
             Project project, String methodName, String propAccessForErrorMessage) {
         Object androidExt = project.getExtensions().getByName("android");

@@ -1,7 +1,16 @@
 package info.vividcode.android.build.gradle.plugin.sdkmanager;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Executer for the tools/android command in Android SDK.
@@ -55,6 +64,54 @@ class SdkAndroidCommandExecuter {
             // TODO error handling
         } catch (IOException err) {
             err.printStackTrace();
+            throw new RuntimeException(err);
+        }
+    }
+
+    private Set<String> readAllDataFromBufferedReaderAndCreateList(BufferedReader r)
+            throws IOException {
+        Set<String> names = new HashSet<>();
+        Pattern namePattern = Pattern.compile("id:\\s+\\d+\\s+or\\s+\"([^\"]+)\"");
+        String line;
+        while ((line = r.readLine()) != null) {
+            Matcher m = namePattern.matcher(line);
+            if (m.find()) {
+                names.add(m.group(1));
+            }
+        }
+        return names;
+    }
+
+    public Set<String> executeListSdkCommandAndGetAvailableComponentNames() {
+        String[] cmd = new String[] {
+            mExecFilePath,
+            "list", "sdk",
+            "--extended",
+        };
+        final Process listSdkProc;
+        try {
+            listSdkProc = executeCommand(cmd);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        try (
+                InputStream procStdout = listSdkProc.getInputStream();
+                InputStream procErrout = listSdkProc.getErrorStream();
+                OutputStream procInput = listSdkProc.getOutputStream();
+                BufferedReader procStdoutReader =
+                        new BufferedReader(new InputStreamReader(procStdout, StandardCharsets.UTF_8))) {
+            Set<String> names = readAllDataFromBufferedReaderAndCreateList(procStdoutReader);
+            try {
+                listSdkProc.waitFor();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            if (listSdkProc.exitValue() != 0) {
+                throw new RuntimeException("`android list sdk` command failed");
+            }
+            return names;
+        } catch (IOException err) {
             throw new RuntimeException(err);
         }
     }
