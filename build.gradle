@@ -1,9 +1,11 @@
 apply plugin: 'java'
+apply plugin: 'maven'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 version = '0.1-SNAPSHOT'
+group = "info.vividcode.android.build"
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -26,4 +28,40 @@ dependencies {
     compile localGroovy()
 
     testCompile 'junit:junit:4.+'
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: "file:m2repo")
+
+        pom.artifactId = 'vc-android-sdk-manager'
+        pom.project {
+            name 'vc-android-sdk-manager'
+            packaging 'jar'
+            description 'Gradle plugin for Android SDK management'
+            url 'https://github.com/nobuoka/vc-gradle-android-sdk-manager'
+
+            scm {
+                url 'scm:git@github.com:nobuoka/vc-gradle-android-sdk-manager.git'
+                connection 'scm:git@github.com:nobuoka/vc-gradle-android-sdk-manager.git'
+                developerConnection 'scm:git@github.com:nobuoka/vc-gradle-android-sdk-manager.git'
+            }
+
+            licenses {
+                license {
+                    name 'The Apache License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+
+            developers {
+                developer {
+                    id 'nobuoka'
+                    name 'NOBUOKA Yu'
+                    email 'nobuoka+dev@vividcode.info'
+                }
+            }
+        }
+    }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>info.vividcode.android.build</groupId>
+  <artifactId>vc-android-sdk-manager</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20140323.180526</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <lastUpdated>20140323180527</lastUpdated>
+  </versioning>
+</metadata>

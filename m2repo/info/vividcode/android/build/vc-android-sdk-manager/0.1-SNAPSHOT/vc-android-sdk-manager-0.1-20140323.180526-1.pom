@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>info.vividcode.android.build</groupId>
+  <artifactId>vc-android-sdk-manager</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <name>vc-android-sdk-manager</name>
+  <description>Gradle plugin for Android SDK management</description>
+  <url>https://github.com/nobuoka/vc-gradle-android-sdk-manager</url>
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>nobuoka</id>
+      <name>NOBUOKA Yu</name>
+      <email>nobuoka+dev@vividcode.info</email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git@github.com:nobuoka/vc-gradle-android-sdk-manager.git</connection>
+    <developerConnection>scm:git@github.com:nobuoka/vc-gradle-android-sdk-manager.git</developerConnection>
+    <url>scm:git@github.com:nobuoka/vc-gradle-android-sdk-manager.git</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.+</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
