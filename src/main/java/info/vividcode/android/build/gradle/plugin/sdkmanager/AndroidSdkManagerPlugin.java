@@ -7,6 +7,8 @@ public class AndroidSdkManagerPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
+        project.getExtensions().create(
+                "androidSdkManager", AndroidSdkManagerExtension.class, project);
     }
 
 }

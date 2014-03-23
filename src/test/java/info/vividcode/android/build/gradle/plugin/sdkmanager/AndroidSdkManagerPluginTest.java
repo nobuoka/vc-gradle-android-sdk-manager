@@ -1,11 +1,10 @@
 package info.vividcode.android.build.gradle.plugin.sdkmanager;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.HashMap;
 
 import org.gradle.api.Project;
 import org.gradle.testfixtures.ProjectBuilder;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class AndroidSdkManagerPluginTest {
@@ -17,7 +16,10 @@ public class AndroidSdkManagerPluginTest {
         m.put("plugin", "vc-android-sdk-manager");
         project.apply(m);
 
-        assertTrue("Plugin applyed to project without error", true);
+        Assert.assertTrue("Plugin applyed to project without error", true);
+
+        Object ext = project.getExtensions().getByName("androidSdkManager");
+        Assert.assertNotNull("`extension.androidSdkManager` is set", ext);
     }
 
 }
