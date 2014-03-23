@@ -3,6 +3,8 @@ package info.vividcode.android.build.gradle.plugin.sdkmanager;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +13,34 @@ import java.util.Properties;
 import org.gradle.api.Project;
 
 class AndroidSdkManagerUtils {
+
+    static String getAndroidCompileSdkVersion(Project project) {
+        return getPropertyFromAndroidExt(
+                project, "getCompileSdkVersion", "android.compileSdkVersion");
+    }
+
+    static String getAndroidBuildToolsRevision(Project project) {
+        return getPropertyFromAndroidExt(
+                project, "getBuildToolsRevision", "android.buildToolsRevision");
+    }
+
+    private static String getPropertyFromAndroidExt(
+            Project project, String methodName, String propAccessForErrorMessage) {
+        Object androidExt = project.getExtensions().getByName("android");
+        if (androidExt == null) {
+            throw new RuntimeException("There is no `android` extension.");
+        }
+        Object val;
+        try {
+            Method m = androidExt.getClass().getMethod(methodName);
+            val = m.invoke(androidExt);
+        } catch (NoSuchMethodException | SecurityException |
+                IllegalAccessException | IllegalArgumentException |
+                InvocationTargetException e) {
+            throw new RuntimeException("`" + propAccessForErrorMessage + "` couldn't be invoked", e);
+        }
+        return val.toString();
+    }
 
     /**
      * Candidates for the tools/android file in Android SDK.
