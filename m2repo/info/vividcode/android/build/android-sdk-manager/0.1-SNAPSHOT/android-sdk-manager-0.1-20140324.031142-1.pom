@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.vividcode.android.build</groupId>
-  <artifactId>vc-android-sdk-manager</artifactId>
+  <artifactId>android-sdk-manager</artifactId>
   <version>0.1-SNAPSHOT</version>
   <name>vc-android-sdk-manager</name>
   <description>Gradle plugin for Android SDK management</description>

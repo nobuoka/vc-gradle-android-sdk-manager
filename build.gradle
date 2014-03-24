@@ -34,7 +34,7 @@ uploadArchives {
     repositories.mavenDeployer {
         repository(url: "file:m2repo")
 
-        pom.artifactId = 'vc-android-sdk-manager'
+        pom.artifactId = 'android-sdk-manager'
         pom.project {
             name 'vc-android-sdk-manager'
             packaging 'jar'
