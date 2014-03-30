@@ -27,7 +27,19 @@ apply plugin: 'vc-android-sdk-manager'
 // You may have to do this before applying android plugin.
 androidSdkManager.updateSdkComponents(['tools', 'platform-tools'])
 // Update SDK Platform and Build tools after project is evaluated.
-androidSdkManager.updateSdkPlatformAndBuildToolsAfterEvaluate(acceptLicenseAutomatically: true)
+androidSdkManager.updateSdkPlatformAndBuildToolsAfterEvaluate()
+```
+
+If you'd like to make the plugin accept the license of Android SDK automatically,
+use the `acceptLicenseAutomatically` option.
+Please use this option in your responsibility.
+
+```
+// Example of `acceptLicenseAutomatically: true` option.
+androidSdkManager.updateSdkComponents(
+        ['tools', 'platform-tools'], acceptLicenseAutomatically: true)
+androidSdkManager.updateSdkPlatformAndBuildToolsAfterEvaluate(
+        acceptLicenseAutomatically: true)
 ```
 
 ## Projects with similar purpose
