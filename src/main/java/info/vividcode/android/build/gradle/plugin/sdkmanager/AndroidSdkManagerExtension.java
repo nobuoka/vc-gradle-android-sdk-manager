@@ -54,7 +54,9 @@ public class AndroidSdkManagerExtension {
             if (argVal instanceof Boolean) {
                 return (boolean) argVal;
             } else {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException(
+                        "The type of value of named argument `" +
+                        ARG_ACCEPT_LICENSE_AUTOMATICALLY + "` must be Boolean.");
             }
         }
     }
