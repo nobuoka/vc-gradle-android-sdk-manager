@@ -3,6 +3,7 @@ package info.vividcode.android.build.gradle.plugin.sdkmanager;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -44,7 +45,21 @@ public class AndroidSdkManagerExtension {
         return sb.toString();
     }
 
-    public void updateSdkWithFilterWithAgreeingLicenseAutomatically(List<String> targets) {
+    private boolean getAcceptLicenseAutomaticallyValueFromOpts(Map<String, Object> opts) {
+        final String ARG_ACCEPT_LICENSE_AUTOMATICALLY = "acceptLicenseAutomatically";
+        if (!opts.containsKey(ARG_ACCEPT_LICENSE_AUTOMATICALLY)) {
+            return false;
+        } else {
+            Object argVal = opts.get(ARG_ACCEPT_LICENSE_AUTOMATICALLY);
+            if (argVal instanceof Boolean) {
+                return (boolean) argVal;
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }
+    }
+
+    public void updateSdkComponents(Map<String, Object> opts, List<String> targets) {
         SdkAndroidCommandExecuter executer = createSdkAndroidCommandExecuter();
         Set<String> names = executer.executeListSdkCommandAndGetAvailableComponentNames();
         List<String> tt = new ArrayList<>();
@@ -55,23 +70,29 @@ public class AndroidSdkManagerExtension {
                 mLogger.warn("Android SDK component `" + t + "` is already installed or not available.");
             }
         }
-        executeAndroidUpdateSdkCommand(executer, tt);
+        boolean acceptLicenseAutomatically = getAcceptLicenseAutomaticallyValueFromOpts(opts);
+        executeAndroidUpdateSdkCommand(executer, tt, acceptLicenseAutomatically);
     }
 
     private void executeAndroidUpdateSdkCommand(
-            SdkAndroidCommandExecuter executer, List<String> targets) {
+            SdkAndroidCommandExecuter executer, List<String> targets,
+            boolean acceptLicenseAutomatically) {
         if (targets.size() == 0) return;
 
-        ProcessUserAgent.Factory puaFactory =
-                new AutomaticallyResponsingProcessUserAgent.Factory(
-                        Pattern.compile("Do you accept the license .*"), "y");
+        ProcessUserAgent.Factory puaFactory;
+        if (acceptLicenseAutomatically) {
+            puaFactory = new AutomaticallyResponsingProcessUserAgent.Factory(
+                    Pattern.compile("Do you accept the license .*"), "y");
+        } else {
+            puaFactory = new ConsoleProxyProcessUserAgent.Factory();
+        }
         if (targets.size() > 0) {
             String filter = joinStrings(targets, ',');
             executer.executeUpdateSdkCommandWithFilter(filter, puaFactory);
         }
     }
 
-    public void updateSdkPlatformAndBuildTools() {
+    public void updateSdkPlatformAndBuildTools(Map<String,Object> opts) {
         List<String> targets = new ArrayList<>();
         SdkAndroidCommandExecuter executer = createSdkAndroidCommandExecuter();
         Set<String> names = executer.executeListSdkCommandAndGetAvailableComponentNames();
@@ -94,14 +115,15 @@ public class AndroidSdkManagerExtension {
             mLogger.warn("Build tools `" + buildToolsFilterName + "` is already installed.");
         }
 
-        executeAndroidUpdateSdkCommand(executer, targets);
+        boolean acceptLicenseAutomatically = getAcceptLicenseAutomaticallyValueFromOpts(opts);
+        executeAndroidUpdateSdkCommand(executer, targets, acceptLicenseAutomatically);
     }
 
-    public void updateSdkPlatformAndBuildToolsAfterEvaluate() {
+    public void updateSdkPlatformAndBuildToolsAfterEvaluate(final Map<String,Object> opts) {
         mProject.afterEvaluate(new Action<Project>() {
             @Override
             public void execute(Project project) {
-                updateSdkPlatformAndBuildTools();
+                updateSdkPlatformAndBuildTools(opts);
             }
         });
     }
