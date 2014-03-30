@@ -65,7 +65,7 @@ class AndroidSdkManagerUtils {
                 return candidateFilePath;
             }
         }
-        throw new RuntimeException("Executable file `android` not found");
+        throw new RuntimeException("Executable file `android` not found in Android SDK directory");
     }
 
     private static String readLocalPropertiesValue(Project project, String key) {
