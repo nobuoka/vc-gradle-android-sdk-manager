@@ -30,6 +30,10 @@ androidSdkManager.updateSdkComponents(['tools', 'platform-tools'])
 androidSdkManager.updateSdkPlatformAndBuildToolsAfterEvaluate(acceptLicenseAutomatically: true)
 ```
 
+## Projects with similar purpose
+
+* [cookpad/gradle-android-sdk-manager](https://github.com/cookpad/gradle-android-sdk-manager)
+
 ## License
 
 This project is released under the
