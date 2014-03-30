@@ -2,6 +2,7 @@ package info.vividcode.android.build.gradle.plugin.sdkmanager;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -61,6 +62,10 @@ public class AndroidSdkManagerExtension {
         }
     }
 
+    public void updateSdkComponents(List<String> targets) {
+        updateSdkComponents(Collections.<String,Object>emptyMap(), targets);
+    }
+
     public void updateSdkComponents(Map<String, Object> opts, List<String> targets) {
         SdkAndroidCommandExecuter executer = createSdkAndroidCommandExecuter();
         Set<String> names = executer.executeListSdkCommandAndGetAvailableComponentNames();
@@ -94,6 +99,10 @@ public class AndroidSdkManagerExtension {
         }
     }
 
+    public void updateSdkPlatformAndBuildTools() {
+        updateSdkPlatformAndBuildTools(Collections.<String,Object>emptyMap());
+    }
+
     public void updateSdkPlatformAndBuildTools(Map<String,Object> opts) {
         List<String> targets = new ArrayList<>();
         SdkAndroidCommandExecuter executer = createSdkAndroidCommandExecuter();
@@ -119,6 +128,10 @@ public class AndroidSdkManagerExtension {
 
         boolean acceptLicenseAutomatically = getAcceptLicenseAutomaticallyValueFromOpts(opts);
         executeAndroidUpdateSdkCommand(executer, targets, acceptLicenseAutomatically);
+    }
+
+    public void updateSdkPlatformAndBuildToolsAfterEvaluate() {
+        updateSdkPlatformAndBuildToolsAfterEvaluate(Collections.<String,Object>emptyMap());
     }
 
     public void updateSdkPlatformAndBuildToolsAfterEvaluate(final Map<String,Object> opts) {
