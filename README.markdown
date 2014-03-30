@@ -14,7 +14,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'info.vividcode.android.build:vc-android-sdk-manager:0.1.+'
+        classpath 'info.vividcode.android.build:android-sdk-manager:0.1.+'
     }
 }
 ```
@@ -34,10 +34,10 @@ If you'd like to make the plugin accept the license of Android SDK automatically
 use the `acceptLicenseAutomatically` option.
 Please use this option in your responsibility.
 
-```
+```groovy
 // Example of `acceptLicenseAutomatically: true` option.
-androidSdkManager.updateSdkComponents(
-        ['tools', 'platform-tools'], acceptLicenseAutomatically: true)
+androidSdkManager.updateSdkComponents(['tools', 'platform-tools'],
+        acceptLicenseAutomatically: true)
 androidSdkManager.updateSdkPlatformAndBuildToolsAfterEvaluate(
         acceptLicenseAutomatically: true)
 ```
