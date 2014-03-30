@@ -4,6 +4,7 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 version = '0.1-SNAPSHOT'
+group = "info.vividcode.android.build"
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
