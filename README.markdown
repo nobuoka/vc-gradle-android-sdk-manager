@@ -44,7 +44,8 @@ androidSdkManager.updateSdkPlatformAndBuildToolsAfterEvaluate(
 
 ## Projects with similar purpose
 
-* [cookpad/gradle-android-sdk-manager](https://github.com/cookpad/gradle-android-sdk-manager)
+* [JakeWharton/sdk-manager-plugin](https://github.com/JakeWharton/sdk-manager-plugin)
+* [cookpad/gradle-android-sdk-manager](https://github.com/cookpad/gradle-android-sdk-manager) (Deprecated)
 
 ## License
 
