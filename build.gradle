@@ -6,7 +6,7 @@ apply plugin: 'java'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-version = '0.1-SNAPSHOT'
+version = '0.9.0'
 group = "info.vividcode.android.build"
 
 tasks.withType(JavaCompile) {
