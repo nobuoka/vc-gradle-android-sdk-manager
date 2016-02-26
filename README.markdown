@@ -1,27 +1,33 @@
-Gradle plugin: vc-android-sdk-manager
+Gradle plugin: info.vividcode.android.sdk-manager
 ==================================================
 
-This plugin enables you to update Android SDK components in the Gradle build script.
+This plugin allows you to update Android SDK components in the Gradle build script.
 
-## Usage (version 0.1.x)
+## Gradle Plugin Portal
+
+This plugin is distributed through the Gradle Plugin Portal:
+
+* [Gradle - Plugin: info.vividcode.android.sdk-manager](https://plugins.gradle.org/plugin/info.vividcode.android.sdk-manager)
+
+## Usage (version 0.9.x)
 
 ```groovy
 // Write the dependency of the build script.
 buildscript {
-    repositories {
-        maven {
-            url 'https://raw.githubusercontent.com/nobuoka/vc-gradle-android-sdk-manager/mvn-staging/m2repo/'
-        }
+  repositories {
+    maven {
+      url 'https://plugins.gradle.org/m2/'
     }
-    dependencies {
-        classpath 'info.vividcode.android.build:android-sdk-manager:0.1.+'
-    }
+  }
+  dependencies {
+    classpath 'gradle.plugin.info.vividcode.android.build:vc-gradle-android-sdk-manager:0.9.0'
+  }
 }
 ```
 
 ```groovy
 // Apply plugin.
-apply plugin: 'vc-android-sdk-manager'
+apply plugin: 'info.vividcode.android.sdk-manager'
     // then, you can use `androidSdkManager`
 // Update SDK Components with filters.
 // You may have to do this before applying android plugin.
