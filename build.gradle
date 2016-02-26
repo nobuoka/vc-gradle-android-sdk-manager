@@ -40,7 +40,7 @@ pluginBundle {
 
     plugins {
         androidSdkManagerPlugin {
-            id = 'android-sdk-manager'
+            id = 'info.vividcode.android.sdk-manager'
             displayName = 'Android SDK Manager'
         }
     }
