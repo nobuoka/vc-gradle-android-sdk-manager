@@ -1,0 +1,3 @@
+[submodule "AndroidSdkClientForJava"]
+	path = AndroidSdkClientForJava
+	url = git@github.com:nobuoka/AndroidSdkClientForJava.git
