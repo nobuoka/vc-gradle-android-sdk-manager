@@ -29,6 +29,7 @@ repositories {
 
 dependencies {
     compile gradleApi()
+    compile project(':AndroidSdkClientForJava')
     testCompile 'junit:junit:4.+'
 }
 

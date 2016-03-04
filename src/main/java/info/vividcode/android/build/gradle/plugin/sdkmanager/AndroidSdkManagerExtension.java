@@ -29,6 +29,11 @@ import org.gradle.api.Project;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.vividcode.android.sdk.client.AndroidCommandExecutor;
+import info.vividcode.android.sdk.client.AutoRespondingProcessIoHandler;
+import info.vividcode.android.sdk.client.ConsoleProxyProcessIoHandler;
+import info.vividcode.android.sdk.client.ProcessIoHandler;
+
 public class AndroidSdkManagerExtension {
 
     private final Project mProject;
@@ -40,11 +45,11 @@ public class AndroidSdkManagerExtension {
         mProject = project;
     }
 
-    private SdkAndroidCommandExecuter createSdkAndroidCommandExecuter() {
+    private AndroidCommandExecutor createAndroidCommandExecutor() {
         Path sdkDirPath = AndroidSdkManagerUtils.findAndroidSdkDir(mProject);
         Path execFilePath =
                 AndroidSdkManagerUtils.findSdkToolsAndroidExecFile(sdkDirPath);
-        return new SdkAndroidCommandExecuter(execFilePath);
+        return new AndroidCommandExecutor(execFilePath);
     }
 
     private static String joinStrings(List<String> strs, char sep) {
@@ -83,8 +88,8 @@ public class AndroidSdkManagerExtension {
     }
 
     public void updateSdkComponents(Map<String, Object> opts, List<String> targets) {
-        SdkAndroidCommandExecuter executer = createSdkAndroidCommandExecuter();
-        Set<String> names = executer.executeListSdkCommandAndGetAvailableComponentNames();
+        AndroidCommandExecutor executor = createAndroidCommandExecutor();
+        Set<String> names = executor.listSdk();
         List<String> tt = new ArrayList<>();
         for (String t : targets) {
             if (names.contains(t)) {
@@ -94,24 +99,28 @@ public class AndroidSdkManagerExtension {
             }
         }
         boolean acceptLicenseAutomatically = getAcceptLicenseAutomaticallyValueFromOpts(opts);
-        executeAndroidUpdateSdkCommand(executer, tt, acceptLicenseAutomatically);
+        executeAndroidUpdateSdkCommand(executor, tt, acceptLicenseAutomatically);
     }
 
     private void executeAndroidUpdateSdkCommand(
-            SdkAndroidCommandExecuter executer, List<String> targets,
+            AndroidCommandExecutor executor, List<String> targets,
             boolean acceptLicenseAutomatically) {
         if (targets.size() == 0) return;
 
-        ProcessUserAgent.Factory puaFactory;
+        ProcessIoHandler.Factory f;
         if (acceptLicenseAutomatically) {
-            puaFactory = new AutomaticallyResponsingProcessUserAgent.Factory(
+            f = new AutoRespondingProcessIoHandler.Factory(
                     Pattern.compile("Do you accept the license .*"), "y");
         } else {
-            puaFactory = new ConsoleProxyProcessUserAgent.Factory();
+            f = new ConsoleProxyProcessIoHandler.Factory();
         }
         if (targets.size() > 0) {
             String filter = joinStrings(targets, ',');
-            executer.executeUpdateSdkCommandWithFilter(filter, puaFactory);
+            try {
+                executor.updateSdkWithFilter(filter, f);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -121,8 +130,8 @@ public class AndroidSdkManagerExtension {
 
     public void updateSdkPlatformAndBuildTools(Map<String,Object> opts) {
         List<String> targets = new ArrayList<>();
-        SdkAndroidCommandExecuter executer = createSdkAndroidCommandExecuter();
-        Set<String> names = executer.executeListSdkCommandAndGetAvailableComponentNames();
+        AndroidCommandExecutor executor = createAndroidCommandExecutor();
+        Set<String> names = executor.listSdk();
 
         // SDK Platform
         String compileSdkVersion =
@@ -143,7 +152,7 @@ public class AndroidSdkManagerExtension {
         }
 
         boolean acceptLicenseAutomatically = getAcceptLicenseAutomaticallyValueFromOpts(opts);
-        executeAndroidUpdateSdkCommand(executer, targets, acceptLicenseAutomatically);
+        executeAndroidUpdateSdkCommand(executor, targets, acceptLicenseAutomatically);
     }
 
     public void updateSdkPlatformAndBuildToolsAfterEvaluate() {
